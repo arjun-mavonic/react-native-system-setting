@@ -233,19 +233,6 @@ RCT_EXPORT_METHOD(activeListener:(NSString *)type resolve:(RCTPromiseResolveBloc
                           options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld
                           context:nil];
 }
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
-{
-
-    if (object == [AVAudioSession sharedInstance] && [keyPath isEqualToString:@"outputVolume"]) {
-        float newValue = [change[@"new"] floatValue];
-        if (skipSetVolumeCount == 0 && hasListeners) {
-                [self sendEventWithName:@"EventVolume" body:@{@"value": [NSNumber numberWithFloat:newValue]}];
-        }
-        if (skipSetVolumeCount > 0) {
-                skipSetVolumeCount--;
-        }
-    }
-}
 
 -(void)removeVolumeListener {
     AVAudioSession* audioSession = [AVAudioSession sharedInstance];
